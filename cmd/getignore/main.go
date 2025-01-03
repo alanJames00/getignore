@@ -11,14 +11,28 @@ func main() {
 	// define CLI flags
 	lang := flag.String("lang", "", "programming language or platform for the .gitignore template")
 	overwrite := flag.Bool("ow", false, "If true, overwrite existing gitignore, otherwise append to cuurret gitignore")
+	help := flag.Bool("help", false, "show the help message")
+	shortHelp := flag.Bool("h", false, "show the help message")
+	allLang := flag.Bool("all", false, "print all available programming languages and platforms")
 
 	flag.Parse()
+
+	// handle help 
+	if *help || *shortHelp {
+		internal.PrintHelp()
+		os.Exit(0)
+	}
+
+	// handle print all languages
+	if *allLang {
+		internal.ShowAllLangs()
+		os.Exit(0)
+	}
 
 	// validate flags
 	if *lang == "" {
 		fmt.Println("ERROR: missing requireed --lang flag")
-		// print all available langs
-		// TODO: send help
+		internal.PrintHelp()
 		os.Exit(1)
 	}
 

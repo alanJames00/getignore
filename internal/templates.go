@@ -1,4 +1,4 @@
-package internal 
+package internal
 
 import (
 	"fmt"
@@ -10,16 +10,16 @@ import (
 )
 
 // fetch all the langs and platforms from the api
-func ShowAllLangs()  {
+func ShowAllLangs() {
 	// API: list all langs
 	resp, err := http.Get("https://www.toptal.com/developers/gitignore/api/list")
 	if err != nil {
 		// TODO: error in api call
 		fmt.Println(err.Error())
-		os.Exit(1);
+		os.Exit(1)
 	}
 	defer resp.Body.Close()
-	
+
 	// check resp status code
 	if resp.StatusCode != http.StatusOK {
 		fmt.Println("Unexpected status code", resp.StatusCode)
@@ -33,7 +33,6 @@ func ShowAllLangs()  {
 		fmt.Println("Error reading response body", err.Error())
 		os.Exit(1)
 	}
-
 
 	// parse and print the body in numbered lines
 	// read each line
@@ -53,27 +52,27 @@ func GetTemplate(lang string) string {
 	lang = strings.TrimSpace(lang)
 
 	// only include alphanumeric chars, hypens and underscores
-	lang = regexp.MustCompile("[^a-zA-Z0-9_-]").ReplaceAllString(lang, "")	
+	lang = regexp.MustCompile("[^a-zA-Z0-9_-]").ReplaceAllString(lang, "")
 	if lang == "" {
 		fmt.Println("ERROR: language must not be empty")
 		os.Exit(1)
 	}
 
 	// check if the language exists
-	resp, err := http.Get("https://www.toptal.com/developers/gitignore/api/"+ lang)
+	resp, err := http.Get("https://www.toptal.com/developers/gitignore/api/" + lang)
 	if err != nil {
 		// TODO: error in api call
 		fmt.Println(err.Error())
 		os.Exit(1)
 	}
 	defer resp.Body.Close()
-	
+
 	// check resp status code
 	if resp.StatusCode == http.StatusNotFound {
 		fmt.Printf("ERROR: programming language `%s` is invalid or not available\n", lang)
 		os.Exit(1)
 	}
-	
+
 	if resp.StatusCode != http.StatusOK {
 		fmt.Println("ERROR: Unexpected status code from API")
 		os.Exit(1)
@@ -89,4 +88,34 @@ func GetTemplate(lang string) string {
 	return (string(body))
 }
 
+// print help menu
+func PrintHelp() {
+	fmt.Println(`
 
+Usage: getignore [OPTIONS]
+
+A simple CLI tool to generate .gitignore files in your Git repositories. 
+You can generate or append .gitignore templates based on programming languages or platforms.
+
+Options:
+  --lang string        Specify the programming language or platform for the .gitignore template.
+                       Example: --lang=python, --lang=go
+  --ow                 Overwrite the existing .gitignore file if it exists.
+                       If omitted, the template will be appended to the current .gitignore file.
+  -h, --help           Show this help message and exit.
+  -all                 List all available programming languages and platforms
+
+Examples:
+  1. Append a Python .gitignore template to the current .gitignore:
+       gitignore-helper --lang=python
+
+  2. Overwrite the .gitignore with a Go template:
+       gitignore-helper --lang=go --ow
+
+Notes:
+  - The tool must be run at the root directory of a Git repository.
+  - If the --lang flag is missing, the program will exit with an error.
+  - Use the --ow flag to specify whether to overwrite the current .gitignore file.
+
+`)
+}

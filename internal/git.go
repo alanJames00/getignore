@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 )
@@ -35,6 +34,3 @@ func IgnoreExists(dir string) bool {
 	return !info.IsDir()
 }
 
-func main() {
-	fmt.Println(IgnoreExists("./"))
-}
