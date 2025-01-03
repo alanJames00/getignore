@@ -1,6 +1,7 @@
-package main
+package internal
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 )
@@ -20,4 +21,20 @@ func IsGitRoot(dir string) bool {
 	return info.IsDir()
 }
 
+// TODO: refactor and make it better
+// check if a gitignore file exists in the root
+func IgnoreExists(dir string) bool {
+	gitPath := filepath.Join(dir, ".gitignore")
 
+	info, err := os.Stat(gitPath)
+	if err != nil {
+		return false
+	}
+
+	// check if .gitignore is a file
+	return !info.IsDir()
+}
+
+func main() {
+	fmt.Println(IgnoreExists("./"))
+}
