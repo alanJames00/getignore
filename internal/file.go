@@ -38,5 +38,5 @@ func WriteGitIgnore(content string, overwrite bool, gitinoreExists bool) {
 		}
 	}
 
-	fmt.Println("SUCCESS: gitignore written")
+	fmt.Println("Successfully written to .gitignore")
 }

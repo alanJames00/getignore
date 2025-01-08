@@ -91,7 +91,6 @@ func GetTemplate(lang string) string {
 // print help menu
 func PrintHelp() {
 	fmt.Println(`
-
 Usage: getignore [OPTIONS]
 
 A simple CLI tool to generate .gitignore files in your Git repositories. 
@@ -115,7 +114,5 @@ Examples:
 Notes:
   - The tool must be run at the root directory of a Git repository.
   - If the --lang flag is missing, the program will exit with an error.
-  - Use the --ow flag to specify whether to overwrite the current .gitignore file.
-
-`)
+  - Use the --ow flag to specify whether to overwrite the current .gitignore file.`)
 }

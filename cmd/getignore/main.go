@@ -3,54 +3,51 @@ package main
 import (
 	"flag"
 	"fmt"
-	"getignore/internal"
 	"os"
+
+	"github.com/alanjames00/getignore/internal"
 )
 
 func main() {
 	// define CLI flags
 	lang := flag.String("lang", "", "programming language or platform for the .gitignore template")
-	overwrite := flag.Bool("ow", false, "If true, overwrite existing gitignore, otherwise append to cuurret gitignore")
+	overwrite := flag.Bool("ow", false, "If true, overwrite existing gitignore, otherwise append to current gitignore")
 	help := flag.Bool("help", false, "show the help message")
 	shortHelp := flag.Bool("h", false, "show the help message")
 	allLang := flag.Bool("all", false, "print all available programming languages and platforms")
 
 	flag.Parse()
 
-	// handle help 
-	if *help || *shortHelp {
+	switch {
+	case *help || *shortHelp:
 		internal.PrintHelp()
 		os.Exit(0)
-	}
 
-	// handle print all languages
-	if *allLang {
+	case *allLang:
 		internal.ShowAllLangs()
 		os.Exit(0)
-	}
 
-	// validate flags
-	if *lang == "" {
-		fmt.Println("ERROR: missing requireed --lang flag")
+	case *lang == "":
+		fmt.Println("ERROR: missing required --lang flag")
 		internal.PrintHelp()
 		os.Exit(1)
+
+	default:
+		fmt.Println("overwriting:", *overwrite)
+
+		// check if it's a git repo root
+		if !internal.IsGitRoot("./") {
+			fmt.Println("ERROR: Are you in a git repository root?")
+			os.Exit(1)
+		}
+
+		// get the template content
+		templateContent := internal.GetTemplate(*lang)
+
+		// check if gitignore file exists
+		gitignoreExists := internal.IgnoreExists("./")
+
+		// write or append to gitignore file
+		internal.WriteGitIgnore(templateContent, *overwrite, gitignoreExists)
 	}
-
-	fmt.Println("overwriting:", *overwrite)
-
-	// check if its a git repo root
-	isGitRoot := internal.IsGitRoot("./")
-	if !isGitRoot {
-		fmt.Println("ERROR: current working directory is not a git repository root")
-		os.Exit(1)
-	}
-
-	// get the template content 
-	templateContent := internal.GetTemplate(*lang)
-
-	// check if gitignore file exists
-	gitignoreExists := internal.IgnoreExists("./")
-
-	// write or append to gitignore file
-	internal.WriteGitIgnore(templateContent, *overwrite, gitignoreExists)
 }

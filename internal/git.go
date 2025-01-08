@@ -5,32 +5,26 @@ import (
 	"path/filepath"
 )
 
-// check if the given path is a git repo
+// IsGitRoot checks if the given path is a Git repository root.
 func IsGitRoot(dir string) bool {
-	// build the full path to the .git directory
 	gitPath := filepath.Join(dir, ".git")
 
-	// check if .git directory exists
 	info, err := os.Stat(gitPath)
-	if err != nil {
+	if err != nil || !info.IsDir() {
 		return false
 	}
 
-	// check if .git is a directory
-	return info.IsDir()
+	return true
 }
 
-// TODO: refactor and make it better
-// check if a gitignore file exists in the root
+// IgnoreExists checks if a .gitignore file exists in the given directory.
 func IgnoreExists(dir string) bool {
-	gitPath := filepath.Join(dir, ".gitignore")
+	gitignorePath := filepath.Join(dir, ".gitignore")
 
-	info, err := os.Stat(gitPath)
+	info, err := os.Stat(gitignorePath)
 	if err != nil {
 		return false
 	}
 
-	// check if .gitignore is a file
-	return !info.IsDir()
+	return info.Mode().IsRegular()
 }
-
