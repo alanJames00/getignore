@@ -3,8 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
-	"getignore/internal"
 	"os"
+
+	"github.com/alanjames00/getignore/internal"
 )
 
 func main() {
@@ -17,7 +18,7 @@ func main() {
 
 	flag.Parse()
 
-	// handle help 
+	// handle help
 	if *help || *shortHelp {
 		internal.PrintHelp()
 		os.Exit(0)
@@ -45,7 +46,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	// get the template content 
+	// get the template content
 	templateContent := internal.GetTemplate(*lang)
 
 	// check if gitignore file exists
