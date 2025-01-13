@@ -37,7 +37,7 @@ func main() {
 
 		// check if it's a git repo root
 		if !internal.IsGitRoot("./") {
-			fmt.Println("ERROR: Are you in a git repository root?")
+			fmt.Println("ERROR: Are you in the Git repository root? Please navigate to the root directory and try again.")
 			os.Exit(1)
 		}
 
